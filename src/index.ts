@@ -20,6 +20,12 @@ export {
   codeToIndex,
   indexToCode,
 } from './core/lookup';
+export {
+  generateMultiple,
+  getAllGua,
+  searchByName,
+  formatResult,
+} from './core/utils';
 
 // Constants
 export { GUA_DATA } from './constants/gua';

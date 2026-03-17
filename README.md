@@ -41,6 +41,33 @@ console.log(result.gua.yao);   // 爻辞
 
 ## API
 
+### 起卦函数
+
+```typescript
+import {
+  generate,
+  generateByShi,
+  generateByDice,
+  generateByCoins,
+  generateByNumber
+} from 'taixuan-lib';
+
+// 随机起卦
+const result = generate();
+
+// 蓍草法
+const result2 = generateByShi();
+
+// 骰子法
+const result3 = generateByDice();
+
+// 硬币法
+const result4 = generateByCoins();
+
+// 数字法（确定性）
+const result5 = generateByNumber(1234);
+```
+
 ### 查询函数
 
 ```typescript
@@ -51,6 +78,36 @@ const gua = lookupByIndex(1);
 
 // 按编码查询
 const gua2 = lookupByCode([1, 1, 1, 1]);
+```
+
+### 实用工具
+
+```typescript
+import {
+  generateMultiple,
+  searchByName,
+  formatResult,
+  getAllGua
+} from 'taixuan-lib';
+
+// 批量起卦
+const results = generateMultiple(5);
+
+// 按名称搜索
+const guaList = searchByName('中');
+
+// 格式化输出
+const text = formatResult(result);
+console.log(text);
+// 输出：
+// 【中】第 41 首
+// 编码：2-2-2-2
+// 时间：2026/3/17 15:57:45
+//
+// 赞辞内容...
+
+// 获取所有卦象
+const allGua = getAllGua();
 ```
 
 ### 数据结构

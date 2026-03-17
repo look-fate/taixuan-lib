@@ -1,5 +1,5 @@
 import type { TaiXuanGua, GuaInfo } from '../types';
-import { GUA_DATA } from '../constants/gua';
+import { GUA_DATA, GUA_MAP } from '../constants/gua';
 
 /**
  * 将三进制编码转换为索引 (1-81)
@@ -45,7 +45,10 @@ export function lookupByCode(code: TaiXuanGua): GuaInfo {
  * @returns 卦象信息
  */
 export function lookupByIndex(index: number): GuaInfo {
-  const gua = GUA_DATA.find((g) => g.index === index);
+  if (index < 1 || index > 81) {
+    throw new Error(`索引必须在 1-81 之间，收到: ${index}`);
+  }
+  const gua = GUA_MAP.get(index);
   if (!gua) {
     throw new Error(`未找到索引为 ${index} 的卦象`);
   }

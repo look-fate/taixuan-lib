@@ -9,10 +9,11 @@ function randomDigit(): TaiXuanDigit {
 }
 
 /**
- * 生成随机卦象编码
+ * 通用起卦结果生成函数
  */
-function generateCode(): TaiXuanGua {
-  return [randomDigit(), randomDigit(), randomDigit(), randomDigit()];
+function createResult(digitFn: () => TaiXuanDigit): DivinationResult {
+  const code: TaiXuanGua = [digitFn(), digitFn(), digitFn(), digitFn()];
+  return { gua: lookupByCode(code), timestamp: Date.now() };
 }
 
 /**
@@ -20,12 +21,7 @@ function generateCode(): TaiXuanGua {
  * @returns 占卜结果，包含卦象信息和时间戳
  */
 export function generate(): DivinationResult {
-  const code = generateCode();
-  const gua = lookupByCode(code);
-  return {
-    gua,
-    timestamp: Date.now(),
-  };
+  return createResult(randomDigit);
 }
 
 /**
@@ -33,18 +29,13 @@ export function generate(): DivinationResult {
  * 每次分蓍得到余数，映射为三进制数字
  */
 export function generateByShi(): DivinationResult {
-  const shiDigit = (): TaiXuanDigit => {
-    // 模拟49根蓍草分堆取余
-    const total = 49;
-    const left = Math.floor(Math.random() * (total - 1)) + 1;
+  return createResult(() => {
+    const left = Math.floor(Math.random() * 48) + 1;
     const remainder = left % 4;
-    // 余数 0,1 -> 1; 2 -> 2; 3 -> 3
     if (remainder <= 1) return 1;
     if (remainder === 2) return 2;
     return 3;
-  };
-  const code: TaiXuanGua = [shiDigit(), shiDigit(), shiDigit(), shiDigit()];
-  return { gua: lookupByCode(code), timestamp: Date.now() };
+  });
 }
 
 /**
@@ -52,14 +43,12 @@ export function generateByShi(): DivinationResult {
  * 点数 1,2 -> 1; 3,4 -> 2; 5,6 -> 3
  */
 export function generateByDice(): DivinationResult {
-  const diceDigit = (): TaiXuanDigit => {
+  return createResult(() => {
     const dice = Math.floor(Math.random() * 6) + 1;
     if (dice <= 2) return 1;
     if (dice <= 4) return 2;
     return 3;
-  };
-  const code: TaiXuanGua = [diceDigit(), diceDigit(), diceDigit(), diceDigit()];
-  return { gua: lookupByCode(code), timestamp: Date.now() };
+  });
 }
 
 /**
@@ -67,15 +56,13 @@ export function generateByDice(): DivinationResult {
  * 两正 -> 1; 一正一反 -> 2; 两反 -> 3
  */
 export function generateByCoins(): DivinationResult {
-  const coinDigit = (): TaiXuanDigit => {
+  return createResult(() => {
     const c1 = Math.random() < 0.5;
     const c2 = Math.random() < 0.5;
     if (c1 && c2) return 1;
     if (!c1 && !c2) return 3;
     return 2;
-  };
-  const code: TaiXuanGua = [coinDigit(), coinDigit(), coinDigit(), coinDigit()];
-  return { gua: lookupByCode(code), timestamp: Date.now() };
+  });
 }
 
 /**

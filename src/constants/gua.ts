@@ -5,13 +5,19 @@ import taixuanData from './taixuan-data.json';
  * 将四位编码转换为 TaiXuanGua 类型
  */
 function parseCode(code: number): TaiXuanGua {
-  const str = code.toString();
-  return [
-    parseInt(str[0]) as 1 | 2 | 3,
-    parseInt(str[1]) as 1 | 2 | 3,
-    parseInt(str[2]) as 1 | 2 | 3,
-    parseInt(str[3]) as 1 | 2 | 3,
+  const str = code.toString().padStart(4, '1');
+  const digits = [
+    parseInt(str[0]),
+    parseInt(str[1]),
+    parseInt(str[2]),
+    parseInt(str[3]),
   ];
+
+  if (digits.some(d => d < 1 || d > 3 || isNaN(d))) {
+    throw new Error(`无效的卦象编码: ${code}`);
+  }
+
+  return digits as TaiXuanGua;
 }
 
 /**
@@ -39,3 +45,8 @@ export const GUA_DATA: GuaInfo[] = Object.entries(taixuanData as JsonData)
     };
   })
   .sort((a, b) => a.index - b.index);
+
+/**
+ * 卦象索引 Map，用于 O(1) 查询
+ */
+export const GUA_MAP = new Map(GUA_DATA.map(g => [g.index, g]));
